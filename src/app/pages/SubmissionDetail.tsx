@@ -178,7 +178,7 @@ export default function SubmissionDetail() {
         </div>
 
         {/* Card */}
-        <div ref={contentRef} style={{ background: "#fff", border: `2px solid ${TEAL}`, borderRadius: 10, padding: "40px 40px 48px", lineHeight: 1.5 }}>
+        <div ref={contentRef} className="af" style={{ background: "#fff", border: `2px solid ${TEAL}`, borderRadius: 10, padding: "40px 40px 48px", lineHeight: 1.5 }}>
 
           {/* Header */}
           <div style={{ textAlign: "center", borderBottom: `3px solid ${TEAL}`, paddingBottom: 16, marginBottom: 28 }}>
