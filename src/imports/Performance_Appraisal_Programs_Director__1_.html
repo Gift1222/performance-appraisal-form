@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Performance Appraisal Form — Programs Director — Emerge Livelihoods</title>
+<style>
+  :root{
+    --navy:#4C808A;
+    --navy-dark:#16294A;
+    --gold:#4C808A;
+    --black:#000;
+    --light-blue:#EAF1F8;
+    --light-gold:#FBF3E3;
+    --grey-border:#C9CDD3;
+    --text:#222222;
+    --zebra:#F5F7FA;
+    --white:#fff;
+    --dark-blue:#3B4167;
+  }
+  *{box-sizing:border-box;}
+  body{
+    font-family:Arial, Helvetica, sans-serif;
+    color:var(--text);
+    background:#fff;
+    max-width:1050px;
+    margin:0 auto;
+    padding:40px 32px 60px;
+    line-height:1.45;
+  }
+  /* .toolbar{
+    position:sticky;
+    top:0;
+    background:#fff;
+    border-bottom:2px solid var(--navy);
+    padding:10px 0;
+    margin-bottom:18px;
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    align-items:center;
+    z-index:50;
+  } */
+  .toolbar button{
+    background:var(--navy);
+    color:#fff;
+    border:none;
+    padding:9px 16px;
+    border-radius:5px;
+    font-size:13px;
+    font-weight:bold;
+    cursor:pointer;
+  }
+  .toolbar button.secondary{ background:var(--gold); }
+  .toolbar button.danger{ background:#A33A2E; }
+  .toolbar button:hover{ opacity:0.88; }
+  .toolbar .status{
+    font-size:12px;
+    color:#777;
+    margin-left:auto;
+  }
+  .masthead{
+    text-align:center;
+    border-bottom:3px solid var(--gold);
+    padding-bottom:14px;
+    margin-bottom:28px;
+  }
+  .masthead .org{ font-size:22px; font-weight:bold; color:var(--navy-dark); letter-spacing:1px; margin:0; }
+  .masthead .tagline{ font-size:13px; font-style:italic; color:var(--gold); margin:2px 0 16px; }
+  .masthead .title{ font-size:30px; font-weight:bold; color:var(--navy); margin:0; }
+  .masthead .subtitle{ font-size:17px; font-weight:bold; color:#555; margin:4px 0 0; }
+  .confidential{
+    text-align:right; font-size:11px; font-style:italic; color:#777;
+    border-bottom:1px solid var(--grey-border); padding-bottom:6px; margin-bottom:18px;
+  }
+  table{ border-collapse:collapse; width:100%; margin-bottom:18px; font-size:13.5px; }
+  th, td{ border:1px solid var(--dark-blue); padding:6px 8px; text-align:left; vertical-align:middle; }
+  th{ background:var(--navy); color:#fff; font-size:13px; }
+  td.label{ background:var(--light-blue); color:var(--navy-dark); font-weight:bold; width:18%; }
+  td.value{ width:32%; }
+  .section-banner{
+    border-bottom:3px solid var(--gold); padding-bottom:6px; margin:36px 0 14px;
+    font-size:21px; font-weight:bold; color:var(--navy-dark);
+  }
+  .section-banner .num{ color:var(--gold); }
+  .dim-heading{
+    background:var(--light-blue); border-left:6px solid var(--navy); padding:8px 10px;
+    margin:24px 0 4px; font-weight:bold; color:var(--navy); font-size:16px;
+  }
+  .dim-objective{ font-style:italic; color:#444; font-size:13px; margin:0 0 10px 10px; }
+  .dim-objective b{ color:var(--navy-dark); font-style:normal; }
+  tr.zebra td{ background:var(--white); }
+  tr.gold td{ background:var(--white); }
+  td.kra{ font-weight:bold; width:16%; }
+  td.rating-col{ width:9%; text-align:center; }
+  td.comments-col{ width:24%; }
+  .total-row td{ background:var(--light-blue); font-weight:bold; }
+  .overview-text{ font-size:14.5px; text-align:justify; margin-bottom:10px; }
+  .subhead{ font-weight:bold; color:var(--navy-dark); font-size:15.5px; margin:18px 0 8px; }
+
+  input[type=text], input[type=date], textarea, select{
+    width:100%;
+    border:none;
+    background:transparent;
+    font-family:Arial, Helvetica, sans-serif;
+    font-size:13.5px;
+    color:var(--text);
+    padding:2px;
+  }
+  input[type=text]:focus, input[type=date]:focus, textarea:focus, select:focus{
+    outline:2px solid var(--gold);
+    background:#FFFEF6;
+  }
+  textarea{ resize:vertical; min-height:38px; }
+  select.rating-select{ text-align:center; font-weight:bold; cursor:pointer; }
+  .rs-cell{ text-align:center; }
+  textarea.achievement, textarea.development{
+    width:100%;
+    border-bottom:1px solid var(--grey-border);
+    min-height:30px;
+  }
+  ol.numbered-blanks{ list-style:none; padding:0; margin:0 0 18px; counter-reset:item; }
+  ol.numbered-blanks li{ display:flex; gap:8px; align-items:flex-start; margin-bottom:10px; }
+  ol.numbered-blanks li::before{
+    content: counter(item) ".";
+    counter-increment: item;
+    font-weight:bold; color:var(--black); padding-top:4px;
+  }
+  .comment-area{
+    width:100%;
+    border:1px solid var(--grey-border);
+    min-height:70px;
+    margin-bottom:16px;
+    padding:8px;
+  }
+  .sig-block{ margin-top:36px; font-size:14px; }
+  .sig-line{ display:flex; gap:10px; align-items:center; margin-bottom:20px; flex-wrap:wrap; }
+  .sig-line span.label{ min-width:150px; font-weight:bold; color:var(--navy-dark); }
+  .sig-underline{ flex:1; min-width:200px; border-bottom:1px solid #333; }
+  .sig-underline input{ border-bottom:none; }
+  footer.page-footer{
+    text-align:center; color:#999; font-size:11px; margin-top:40px;
+    border-top:1px solid var(--grey-border); padding-top:10px;
+  }
+  @media print{
+    .toolbar{ display:none; }
+    body{ padding:0 10mm; }
+    input, textarea, select{ border:none !important; outline:none !important; background:transparent !important; }
+    .section-banner, .dim-heading{ break-after:avoid; }
+  }
+</style>
+</head>
+<body>
+
+<div class="toolbar">
+  <!-- <button onclick="saveData()">Submit</button> -->
+  <!-- <button class="secondary" onclick="document.getElementById('loadFile').click()">📂 Load saved file</button> -->
+  <input type="file" id="loadFile" accept=".json" style="display:none" onchange="loadData(event)">
+  <!-- <button class="secondary" onclick="window.print()">🖨️ Print / Save as PDF</button> -->
+  <!-- <button class="danger" onclick="clearForm()">🗑️ Clear form</button> -->
+  <span class="status" id="status"></span>
+</div>
+
+<!-- <div class="confidential">Emerge Livelihoods&nbsp;&nbsp;|&nbsp;&nbsp;Confidential Performance Record</div> -->
+
+<div class="masthead">
+  <p class="org">EMERGE LIVELIHOODS</p></br>
+  <!-- <p class="tagline">Building Sustainable Livelihoods, Together</p> -->
+  <p class="title">PERFORMANCE APPRAISAL FORM</p>
+  <p class="subtitle">Programs Director</p>
+</div>
+
+<table class="info-table">
+  <tr>
+    <td class="label">Employee Name</td><td class="value"><input type="text" data-field="employeeName"></td>
+    <td class="label">Position</td><td class="value"><input type="text" data-field="position" value="Programs Director"></td>
+  </tr>
+  <tr>
+    <td class="label">Review Period</td><td class="value"><input type="text" data-field="reviewPeriod" placeholder="For example, Jan – Jun 2026"></td>
+    <td class="label">Date</td><td class="value"><input type="date" data-field="appraisalDate"></td>
+  </tr>
+  <tr>
+    <td class="label">Reviewer(s)</td><td class="value" colspan="3"><input type="text" data-field="reviewers"></td>
+  </tr>
+</table>
+
+<div class="section-banner">1. APPRAISAL OVERVIEW</div>
+<p class="overview-text">This 360-degree performance appraisal evaluates the Programs Director across five core dimensions derived from the role&rsquo;s scope of responsibilities. It places strong emphasis on <strong>Program Management, Fundraising, and Strategic Leadership</strong>, recognizing their critical role in driving the success of Emerge Livelihoods&rsquo; Strategy 2024&ndash;2029.</p>
+
+<div class="section-banner">2. RATING SCALE</div>
+<table>
+  <tr><th style="width:8%;">Rating</th><th style="width:24%;">Category</th><th>Description</th></tr>
+  <tr><td class="rs-cell" style="font-weight:bold;color:#000;">5</td><td style="font-weight:bold;color:#000;">Exceptional</td><td>Consistently exceeds expectations; delivers outstanding results</td></tr>
+  <tr><td class="rs-cell" style="font-weight:bold;color:#000;">4</td><td style="font-weight:bold;color:#000;">Exceeds Expectations</td><td>Frequently surpasses goals</td></tr>
+  <tr><td class="rs-cell" style="font-weight:bold;color:#000;">3</td><td style="font-weight:bold;color:#000;">Meets Expectations</td><td>Achieves set objectives consistently</td></tr>
+  <tr><td class="rs-cell" style="font-weight:bold;color:#000;">2</td><td style="font-weight:bold;color:#000;">Needs Improvement</td><td>Occasionally falls short of expectations</td></tr>
+  <tr><td class="rs-cell" style="font-weight:bold;color:#000;">1</td><td style="font-weight:bold;color:#000;">Unsatisfactory</td><td>Consistently underperforms</td></tr>
+</table>
+
+<div class="section-banner">3. PERFORMANCE DIMENSIONS</div>
+
+<div class="dim-heading">A. PROGRAM PLANNING, MANAGEMENT AND IMPLEMENTATION</div>
+<p class="dim-objective"><b>Objective:</b> To ensure the effective leadership, strategic alignment and quality implementation of all programs under Emerge Livelihoods.</p>
+<table>
+  <tr><th>Key Result Area</th><th>Description</th><th style="width:10%;">Rating</th><th style="width:24%;">Comments</th></tr>
+  <tr class="zebra"><td class="kra">Strategic Leadership</td><td>Provides leadership in developing strategy and budgets aligned with the Emerge Livelihoods Strategic Plan 2024&ndash;2029.</td><td class="rating-col"></td><td class="comments-col"></td></tr>
+  <tr><td class="kra">Operational Planning</td><td>Supports the Managing Director in developing strategic and operational plans based on strategic guidelines.</td><td class="rating-col"></td><td class="comments-col"></td></tr>
+  <tr class="zebra"><td class="kra">Program Alignment</td><td>Reviews and ensures alignment of program priorities, strategies, and plans with core organisational strategy and the localization strategy.</td><td class="rating-col"></td><td class="comments-col"></td></tr>
+  <tr><td class="kra">Implementation Quality</td><td>Ensures quality and effective implementation of all projects, demonstrating value for money and return on investment.</td><td class="rating-col"></td><td class="comments-col"></td></tr>
+  <tr class="zebra"><td class="kra">Knowledge Management</td><td>Ensures all learning and knowledge is documented effectively by the programs team.</td><td class="rating-col"></td><td class="comments-col"></td></tr>
+</table>
+
+<div class="dim-heading">B. FUNDRAISING AND DONOR RELATIONSHIP MANAGEMENT</div>
+<p class="dim-objective"><b>Objective:</b> To drive resource mobilization by developing and managing relationships with funding partners and creating high-quality, participatory grant proposals.</p>
+<table>
+  <tr><th>Key Result Area</th><th>Description</th><th style="width:10%;">Rating</th><th style="width:24%;">Comments</th></tr>
+  <tr class="zebra"><td class="kra">Donor Relationship Management</td><td>Supports the development and management of strong relationships with local and international funding partners.</td><td class="rating-col"></td><td class="comments-col"></td></tr>
+  <tr><td class="kra">Proposal Development</td><td>Leads the development of program ideas and concepts into quality grant proposals using a participatory community approach.</td><td class="rating-col"></td><td class="comments-col"></td></tr>
+  <tr class="zebra"><td class="kra">Resource Mobilization</td><td>Collaborates with the Partnership and Resource Development Department to respond to diverse funding opportunities.</td><td class="rating-col"></td><td class="comments-col"></td></tr>
+</table>
+
+<div class="dim-heading">C. PROGRAM REVIEWS, MONITORING, EVALUATION AND LEARNING</div>
+<p class="dim-objective"><b>Objective:</b> To ensure robust monitoring, evaluation, accountability, and learning systems are in place to track progress, ensure compliance, and promote evidence-based decision-making.</p>
+<table>
+  <tr><th>Key Result Area</th><th>Description</th><th style="width:10%;">Rating</th><th style="width:24%;">Comments</th></tr>
+  <tr class="zebra"><td class="kra">Monitoring AND Evaluation</td><td>Ensures close monitoring of all program activities to track information flow and the systematic documentation of achievements and lessons learned.</td><td class="rating-col"></td><td class="comments-col"></td></tr>
+  <tr><td class="kra">Reporting</td><td>Ensures timely and quality submission of quarterly, bi-annual, and annual program reports according to desired standards.</td><td class="rating-col"></td><td class="comments-col"></td></tr>
+  <tr class="zebra"><td class="kra">Compliance</td><td>Ensures adequate compliance with approved program/project plans and organizational policies.</td><td class="rating-col"></td><td class="comments-col"></td></tr>
+  <tr><td class="kra">Evidence-Based Learning</td><td>Promotes evidence-based learning, documents lessons, and represents Emerge Livelihoods in knowledge-sharing platforms.</td><td class="rating-col"></td><td class="comments-col"></td></tr>
+</table>
+
+<div class="dim-heading">D. PARTNERSHIPS AND NETWORK</div>
+<p class="dim-objective"><b>Objective:</b> To strengthen, manage, and leverage networks and partnerships to enhance the impact and reach of Emerge Livelihoods&rsquo; work.</p>
+<table>
+  <tr><th>Key Result Area</th><th>Description</th><th style="width:10%;">Rating</th><th style="width:24%;">Comments</th></tr>
+  <tr class="zebra"><td class="kra">Network Strengthening</td><td>Supports Program Managers in strengthening networks and rapport with key strategic networks and consortiums.</td><td class="rating-col"></td><td class="comments-col"></td></tr>
+  <tr><td class="kra">Representation</td><td>Represents Emerge Livelihoods in network meetings, events, and forums at national and international levels.</td><td class="rating-col"></td><td class="comments-col"></td></tr>
+  <tr class="zebra"><td class="kra">Partnership Management</td><td>Ensures effective partnerships at all levels per organizational standards and coordinates partnership reviews.</td><td class="rating-col"></td><td class="comments-col"></td></tr>
+  <tr><td class="kra">Collaboration</td><td>Ensures effective information flow with other key stakeholders, including subsidiary teams (Emerge Fund, Emerge Ventures) and academia.</td><td class="rating-col"></td><td class="comments-col"></td></tr>
+</table>
+
+<div class="dim-heading">E. FINANCIAL MANAGEMENT</div>
+<p class="dim-objective"><b>Objective:</b> To manage the department&rsquo;s financial resources effectively and efficiently, ensuring alignment with budgets and policies.</p>
+<table>
+  <tr><th>Key Result Area</th><th>Description</th><th style="width:10%;">Rating</th><th style="width:24%;">Comments</th></tr>
+  <tr class="zebra"><td class="kra">Budgeting AND Planning</td><td>Develops, monitors, reviews, and updates the programs department activity and work plan to ensure cost-effective attainment of objectives.</td><td class="rating-col"></td><td class="comments-col"></td></tr>
+  <tr><td class="kra">Expenditure Management</td><td>Manages the expenditure and disbursement of resources allocated to the program department.</td><td class="rating-col"></td><td class="comments-col"></td></tr>
+  <tr class="zebra"><td class="kra">Financial Review</td><td>Reviews program concepts and financial requests to ensure alignment with financial management policies.</td><td class="rating-col"></td><td class="comments-col"></td></tr>
+  <tr><td class="kra">Monitoring AND Reporting</td><td>Monitors and advises on program spending and variance reports in accordance with organizational procedures.</td><td class="rating-col"></td><td class="comments-col"></td></tr>
+</table>
+
+<div class="dim-heading">F. HUMAN RESOURCE MANAGEMENT</div>
+<p class="dim-objective"><b>Objective:</b> To lead, manage, and develop the programs team to achieve its goals in a motivating and empowering environment.</p>
+<table>
+  <tr><th>Key Result Area</th><th>Description</th><th style="width:10%;">Rating</th><th style="width:24%;">Comments</th></tr>
+  <tr class="zebra"><td class="kra">Team Leadership and Management</td><td>Leads and manages the program team to achieve mandated goals according to annual operational plans.</td><td class="rating-col"></td><td class="comments-col"></td></tr>
+  <tr><td class="kra">Staff Development</td><td>Provides induction, training, coaching, and mentoring; identifies training needs and development opportunities in collaboration with People and Culture.</td><td class="rating-col"></td><td class="comments-col"></td></tr>
+  <tr class="zebra"><td class="kra">Performance Management</td><td>Assigns performance goals, conducts comprehensive performance appraisals and provides feedback to team members.</td><td class="rating-col"></td><td class="comments-col"></td></tr>
+  <tr><td class="kra">Work Environment</td><td>Ensures an empowering and motivating work environment incorporating team building and core values.</td><td class="rating-col"></td><td class="comments-col"></td></tr>
+  <tr class="zebra"><td class="kra">Recruitment and Onboarding</td><td>Participates in the recruitment of staff and review of job descriptions under the supervision of the People and Culture department.</td><td class="rating-col"></td><td class="comments-col"></td></tr>
+</table>
+
+<div class="dim-heading">G. POLICY MANAGEMENT AND COMPLIANCE</div>
+<p class="dim-objective"><b>Objective:</b> To ensure adherence to all organizational policies and procedures and to contribute to their development and review.</p>
+<table>
+  <tr><th>Key Result Area</th><th>Description</th><th style="width:10%;">Rating</th><th style="width:24%;">Comments</th></tr>
+  <tr class="zebra"><td class="kra">Policy Development</td><td>Leads the development and implementation of national-specific guidelines for partnership management.</td><td class="rating-col"></td><td class="comments-col"></td></tr>
+  <tr><td class="kra">Policy Compliance</td><td>Implements all necessary policies and procedures and ensures they are adhered to by the programs team.</td><td class="rating-col"></td><td class="comments-col"></td></tr>
+  <tr class="zebra"><td class="kra">Advisory Role</td><td>Participates in the review and update of policies and advises the Senior Management Team on implications of new policies.</td><td class="rating-col"></td><td class="comments-col"></td></tr>
+</table>
+
+<div class="section-banner">4. CORE VALUES ALIGNMENT</div>
+<table>
+  <tr><th>Value</th><th>Employee Examples</th><th style="width:10%;">Rating</th><th style="width:24%;">Comments</th></tr>
+  <tr class="gold"><td class="kra">Innovation</td><td>We encourage new and creative ideas. Co-creation is at the centre of our minds.</td><td class="rating-col"></td><td class="comments-col"></td></tr>
+  <tr><td class="kra">Collaboration</td><td>We believe in building meaningful partnerships. Together we can do more.</td><td class="rating-col"></td><td class="comments-col"></td></tr>
+  <tr class="gold"><td class="kra">Passion</td><td>We champion strong belief and purpose towards our cause.</td><td class="rating-col"></td><td class="comments-col"></td></tr>
+  <tr><td class="kra">Visionary</td><td>We think beyond today and promote sustainable futures.</td><td class="rating-col"></td><td class="comments-col"></td></tr>
+  <tr class="gold"><td class="kra">Resilience</td><td>We challenge our experiences including withstanding the most demanding encounters.</td><td class="rating-col"></td><td class="comments-col"></td></tr>
+  <tr><td class="kra">Inclusion</td><td>We promote an environment for everyone to feel a sense of belonging and participate fully.</td><td class="rating-col"></td><td class="comments-col"></td></tr>
+  <tr class="total-row"><td>&nbsp;</td><td style="text-align:right;">Total</td><td class="rating-col" id="coreValuesTotal" style="font-weight:bold;">0</td><td>&nbsp;</td></tr>
+</table>
+
+<div class="section-banner">5. OVERALL PERFORMANCE SUMMARY</div>
+<table>
+  <tr><td class="label" style="width:20%;">Overall Rating</td><td><input type="text" data-field="overallRating" placeholder="For example, Exceeds Expectations"></td></tr>
+</table>
+
+<p class="subhead">Key Achievements</p>
+<ol class="numbered-blanks">
+  <li><textarea class="achievement" data-field="achievement1" rows="1"></textarea></li>
+  <li><textarea class="achievement" data-field="achievement2" rows="1"></textarea></li>
+  <li><textarea class="achievement" data-field="achievement3" rows="1"></textarea></li>
+</ol>
+
+<p class="subhead">Areas for Development</p>
+<ol class="numbered-blanks">
+  <li><textarea class="development" data-field="development1" rows="1"></textarea></li>
+  <li><textarea class="development" data-field="development2" rows="1"></textarea></li>
+  <li><textarea class="development" data-field="development3" rows="1"></textarea></li>
+</ol>
+
+<div class="section-banner">6. DEVELOPMENT PLAN</div>
+<table>
+  <tr><th>Development Area</th><th>Action Plan</th><th>Timeline</th><th>Support Required</th></tr>
+  <tr class="zebra"><td><textarea data-field="devArea1" rows="2"></textarea></td><td><textarea data-field="devAction1" rows="2"></textarea></td><td><textarea data-field="devTimeline1" rows="2"></textarea></td><td><textarea data-field="devSupport1" rows="2"></textarea></td></tr>
+  <tr><td><textarea data-field="devArea2" rows="2"></textarea></td><td><textarea data-field="devAction2" rows="2"></textarea></td><td><textarea data-field="devTimeline2" rows="2"></textarea></td><td><textarea data-field="devSupport2" rows="2"></textarea></td></tr>
+  <tr class="zebra"><td><textarea data-field="devArea3" rows="2"></textarea></td><td><textarea data-field="devAction3" rows="2"></textarea></td><td><textarea data-field="devTimeline3" rows="2"></textarea></td><td><textarea data-field="devSupport3" rows="2"></textarea></td></tr>
+</table>
+
+<div class="section-banner">7. FINAL COMMENTS</div>
+<p class="subhead" style="margin-top:6px;">Employee Comments:</p>
+<textarea class="comment-area" data-field="employeeComments"></textarea>
+
+<p class="subhead">Reviewer Comments:</p>
+<textarea class="comment-area" data-field="reviewerComments"></textarea>
+
+<div class="sig-block">
+  <div class="sig-line">
+    <span class="label">Employee Signature:</span>
+    <span class="sig-underline"><input type="text" data-field="employeeSignature"></span>
+    <span class="label" style="min-width:50px;">Date:</span>
+    <span class="sig-underline" style="max-width:160px;"><input type="date" data-field="employeeSignDate"></span>
+  </div>
+  <div class="sig-line">
+    <span class="label">Reviewer Signature:</span>
+    <span class="sig-underline"><input type="text" data-field="reviewerSignature"></span>
+    <span class="label" style="min-width:50px;">Date:</span>
+    <span class="sig-underline" style="max-width:160px;"><input type="date" data-field="reviewerSignDate"></span>
+  </div>
+</div>
+
+<!-- <footer class="page-footer">Emerge Livelihoods &mdash; Confidential Performance Record</footer> -->
+
+<script>
+  document.querySelectorAll('.rating-col').forEach((cell, i) => {
+    const sel = document.createElement('select');
+    sel.className = 'rating-select';
+    sel.dataset.field = 'rating_' + i;
+    sel.innerHTML = '<option value="">—</option>' +
+      [5,4,3,2,1].map(n => `<option value="${n}">${n}</option>`).join('');
+    cell.appendChild(sel);
+  });
+  document.querySelectorAll('.comments-col').forEach((cell, i) => {
+    const ta = document.createElement('textarea');
+    ta.dataset.field = 'comment_' + i;
+    ta.rows = 1;
+    cell.appendChild(ta);
+  });
+
+  function getAllFields(){
+    return Array.from(document.querySelectorAll('[data-field]'));
+  }
+
+  function collectData(){
+    const data = {};
+    getAllFields().forEach(el => { data[el.dataset.field] = el.value; });
+    return data;
+  }
+
+  function applyData(data){
+    getAllFields().forEach(el => {
+      if (data.hasOwnProperty(el.dataset.field)) el.value = data[el.dataset.field];
+    });
+    updateCoreValuesTotal();
+  }
+
+  function saveData(){
+    const data = collectData();
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    const nameField = data['employeeName'] ? data['employeeName'].replace(/\s+/g,'_') : 'appraisal';
+    a.href = url;
+    a.download = `Performance_Appraisal_${nameField}.json`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+    setStatus('Saved ✓');
+  }
+
+  function loadData(event){
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const data = JSON.parse(e.target.result);
+        applyData(data);
+        setStatus('Loaded ✓');
+      } catch (err) {
+        setStatus('Could not read file — invalid JSON');
+      }
+    };
+    reader.readAsText(file);
+    event.target.value = '';
+  }
+
+  function clearForm(){
+    if (!confirm('Clear all entered data on this form? This cannot be undone.')) return;
+    getAllFields().forEach(el => { el.value = ''; });
+    updateCoreValuesTotal();
+    setStatus('Cleared');
+  }
+
+  function setStatus(msg){
+    const s = document.getElementById('status');
+    s.textContent = msg;
+    setTimeout(() => { if (s.textContent === msg) s.textContent = ''; }, 2500);
+  }
+
+  function updateCoreValuesTotal(){
+    const selects = document.querySelectorAll('.rating-select');
+    const coreValueSelects = Array.from(selects).slice(-6);
+    let total = 0;
+    coreValueSelects.forEach(s => { total += parseInt(s.value) || 0; });
+    document.getElementById('coreValuesTotal').textContent = total;
+  }
+  document.addEventListener('change', (e) => {
+    if (e.target.classList && e.target.classList.contains('rating-select')) updateCoreValuesTotal();
+  });
+  updateCoreValuesTotal();
+</script>
+
+</body>
+</html>
