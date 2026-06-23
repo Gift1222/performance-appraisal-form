@@ -234,6 +234,11 @@
     border-radius: 6px !important;
   }
 
+  .grid-feedback {
+    grid-template-columns: 1fr !important;
+    gap: 8px !important;
+  }
+
   /* 9. Overall Rating selectors grid for form inputs */
   div[style*="display: flex; gap: 14px"] {
     gap: 8px !important;

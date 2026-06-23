@@ -26,6 +26,15 @@ export interface DevPlanRow {
   support: string;
 }
 
+export interface Feedback360 {
+  supervisorStrengths: string;
+  supervisorImprovements: string;
+  peerStrengths: string;
+  peerImprovements: string;
+  directReportStrengths: string;
+  directReportImprovements: string;
+}
+
 export interface Submission {
   id: string;
   submittedAt: string;
@@ -41,6 +50,7 @@ export interface Submission {
   achievements: string[];
   developments: string[];
   devPlan: DevPlanRow[];
+  feedback360?: Feedback360;
   employeeComments: string;
   reviewerComments: string;
   employeeSignature: string | null;

@@ -309,6 +309,7 @@ export default function AdminDashboard() {
                   <th>Position</th>
                   <th>Review Period</th>
                   <th>Reviewer(s)</th>
+                  <th style={{ textAlign: "center" }}>360°</th>
                   <th>Overall Rating</th>
                   <th style={{ textAlign: "center" }}>Dims</th>
                   <th style={{ textAlign: "center" }}>KRAs</th>
@@ -325,6 +326,20 @@ export default function AdminDashboard() {
                     <td>{s.position || "—"}</td>
                     <td>{s.reviewPeriod || "—"}</td>
                     <td>{s.reviewers || "—"}</td>
+                    <td style={{ textAlign: "center" }}>
+                      {s.feedback360 && (
+                        s.feedback360.supervisorStrengths || 
+                        s.feedback360.supervisorImprovements ||
+                        s.feedback360.peerStrengths ||
+                        s.feedback360.peerImprovements ||
+                        s.feedback360.directReportStrengths ||
+                        s.feedback360.directReportImprovements
+                      ) ? (
+                        <span style={{ color: "#16a34a", fontWeight: "bold", background: "#f0fdf4", border: "1px solid #bbf7d0", borderRadius: 4, padding: "2px 6px", fontSize: 10 }}>Yes</span>
+                      ) : (
+                        <span style={{ color: "#94a3b8" }}>—</span>
+                      )}
+                    </td>
                     <td>{ratingBadge(s.overallRating)}</td>
                     <td style={{ textAlign: "center" }}>{totalDims(s)}</td>
                     <td style={{ textAlign: "center" }}>{totalKRAs(s)}</td>

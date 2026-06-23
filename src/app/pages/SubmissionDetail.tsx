@@ -291,6 +291,49 @@ export default function SubmissionDetail() {
             </tbody>
           </table>
 
+          {/* 360-degree Feedback */}
+          <Section title="360-degree Feedback" />
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 16, marginBottom: 24 }}>
+            {/* Supervisor Feedback */}
+            <div style={{ border: `1px solid ${TEAL}`, borderRadius: 8, padding: 14, background: "#fafafa" }}>
+              <p style={{ fontWeight: "bold", color: NAVY, fontSize: 13, margin: "0 0 8px" }}>Supervisor Feedback</p>
+              <p style={{ fontSize: 12, margin: "0 0 2px", color: "#475569" }}><strong style={{ color: NAVY }}>Strengths:</strong></p>
+              <div style={{ fontSize: 13, color: "#1e293b", marginBottom: 10, whiteSpace: "pre-wrap" }}>
+                {s.feedback360?.supervisorStrengths || <span style={{ color: "#94a3b8" }}>—</span>}
+              </div>
+              <p style={{ fontSize: 12, margin: "0 0 2px", color: "#475569" }}><strong style={{ color: NAVY }}>Areas for improvement:</strong></p>
+              <div style={{ fontSize: 13, color: "#1e293b", whiteSpace: "pre-wrap" }}>
+                {s.feedback360?.supervisorImprovements || <span style={{ color: "#94a3b8" }}>—</span>}
+              </div>
+            </div>
+
+            {/* Peer Feedback */}
+            <div style={{ border: `1px solid ${TEAL}`, borderRadius: 8, padding: 14, background: "#fafafa" }}>
+              <p style={{ fontWeight: "bold", color: NAVY, fontSize: 13, margin: "0 0 8px" }}>Peer Feedback</p>
+              <p style={{ fontSize: 12, margin: "0 0 2px", color: "#475569" }}><strong style={{ color: NAVY }}>Strengths:</strong></p>
+              <div style={{ fontSize: 13, color: "#1e293b", marginBottom: 10, whiteSpace: "pre-wrap" }}>
+                {s.feedback360?.peerStrengths || <span style={{ color: "#94a3b8" }}>—</span>}
+              </div>
+              <p style={{ fontSize: 12, margin: "0 0 2px", color: "#475569" }}><strong style={{ color: NAVY }}>Areas for improvement:</strong></p>
+              <div style={{ fontSize: 13, color: "#1e293b", whiteSpace: "pre-wrap" }}>
+                {s.feedback360?.peerImprovements || <span style={{ color: "#94a3b8" }}>—</span>}
+              </div>
+            </div>
+
+            {/* Direct Report Feedback */}
+            <div style={{ border: `1px solid ${TEAL}`, borderRadius: 8, padding: 14, background: "#fafafa" }}>
+              <p style={{ fontWeight: "bold", color: NAVY, fontSize: 13, margin: "0 0 8px" }}>Direct Report Feedback</p>
+              <p style={{ fontSize: 12, margin: "0 0 2px", color: "#475569" }}><strong style={{ color: NAVY }}>Strengths:</strong></p>
+              <div style={{ fontSize: 13, color: "#1e293b", marginBottom: 10, whiteSpace: "pre-wrap" }}>
+                {s.feedback360?.directReportStrengths || <span style={{ color: "#94a3b8" }}>—</span>}
+              </div>
+              <p style={{ fontSize: 12, margin: "0 0 2px", color: "#475569" }}><strong style={{ color: NAVY }}>Areas for improvement:</strong></p>
+              <div style={{ fontSize: 13, color: "#1e293b", whiteSpace: "pre-wrap" }}>
+                {s.feedback360?.directReportImprovements || <span style={{ color: "#94a3b8" }}>—</span>}
+              </div>
+            </div>
+          </div>
+
           {/* Overall Summary */}
           <Section title="Overall Performance Summary" />
           <p style={{ fontSize: 14, margin: "0 0 16px", fontFamily: "Verdana, Geneva, sans-serif" }}>

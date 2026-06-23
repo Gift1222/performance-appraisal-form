@@ -142,6 +142,14 @@ export default function HumanResourceCoordinatorForm() {
   const [reviewerSignature, setReviewerSignature] = useState<string | null>(null);
   const [employeeSignDate, setEmployeeSignDate] = useState("");
   const [reviewerSignDate, setReviewerSignDate] = useState("");
+  const [feedback360, setFeedback360] = useState({
+    supervisorStrengths: "",
+    supervisorImprovements: "",
+    peerStrengths: "",
+    peerImprovements: "",
+    directReportStrengths: "",
+    directReportImprovements: "",
+  });
   const [errors, setErrors] = useState<Record<string, boolean>>({});
   const [duplicateModal, setDuplicateModal] = useState<{ existingId: string; payload: ReturnType<typeof buildPayload> } | null>(null);
   const formTopRef = useRef<HTMLDivElement>(null);
@@ -175,6 +183,7 @@ export default function HumanResourceCoordinatorForm() {
       employeeId, employeeName, position, reviewPeriod, appraisalDate, reviewers,
       dimensions: dims, coreValues, overallRating,
       achievements, developments, devPlan,
+      feedback360,
       employeeComments, reviewerComments,
       employeeSignature, reviewerSignature,
       employeeSignDate, reviewerSignDate,
@@ -187,6 +196,14 @@ export default function HumanResourceCoordinatorForm() {
     setOverallRating(""); setAchievements(["", "", ""]); setDevelopments(["", "", ""]);
     setDevPlan(BLANK_DEVPLAN); setEmployeeComments(""); setReviewerComments("");
     setEmployeeSignature(null); setReviewerSignature(null); setEmployeeSignDate(""); setReviewerSignDate("");
+    setFeedback360({
+      supervisorStrengths: "",
+      supervisorImprovements: "",
+      peerStrengths: "",
+      peerImprovements: "",
+      directReportStrengths: "",
+      directReportImprovements: "",
+    });
     setErrors({});
   }
 
@@ -472,8 +489,50 @@ export default function HumanResourceCoordinatorForm() {
           </tbody>
         </table>
 
-        {/* Section 5 — Overall Summary */}
-        <div className="sec">5. OVERALL PERFORMANCE SUMMARY</div>
+                {/* Section 5 — 360-degree feedback */}
+        <div className="sec">5. 360-degree feedback</div>
+        <p className="ov" style={{ marginBottom: 16 }}>
+          Please provide strengths and areas for improvement under the 360-degree feedback cycle.
+        </p>
+
+        <p className="sh">Supervisor feedback</p>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 12 }} className="grid-feedback">
+          <div>
+            <span style={{ fontSize: 11, fontWeight: "bold", color: "#6b7280" }}>Strengths:</span>
+            <textarea className="ca" style={{ minHeight: 60, marginTop: 4, marginBottom: 0 }} value={feedback360.supervisorStrengths} onChange={e => setFeedback360(prev => ({ ...prev, supervisorStrengths: e.target.value }))} placeholder="Supervisor's observations on key strengths..." />
+          </div>
+          <div>
+            <span style={{ fontSize: 11, fontWeight: "bold", color: "#6b7280" }}>Areas for improvement:</span>
+            <textarea className="ca" style={{ minHeight: 60, marginTop: 4, marginBottom: 0 }} value={feedback360.supervisorImprovements} onChange={e => setFeedback360(prev => ({ ...prev, supervisorImprovements: e.target.value }))} placeholder="Supervisor's observations on areas for growth..." />
+          </div>
+        </div>
+
+        <p className="sh">Peer feedback</p>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 12 }} className="grid-feedback">
+          <div>
+            <span style={{ fontSize: 11, fontWeight: "bold", color: "#6b7280" }}>Strengths:</span>
+            <textarea className="ca" style={{ minHeight: 60, marginTop: 4, marginBottom: 0 }} value={feedback360.peerStrengths} onChange={e => setFeedback360(prev => ({ ...prev, peerStrengths: e.target.value }))} placeholder="Peers' observations on key strengths..." />
+          </div>
+          <div>
+            <span style={{ fontSize: 11, fontWeight: "bold", color: "#6b7280" }}>Areas for improvement:</span>
+            <textarea className="ca" style={{ minHeight: 60, marginTop: 4, marginBottom: 0 }} value={feedback360.peerImprovements} onChange={e => setFeedback360(prev => ({ ...prev, peerImprovements: e.target.value }))} placeholder="Peers' observations on areas for growth..." />
+          </div>
+        </div>
+
+        <p className="sh">Direct report feedback</p>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 20 }} className="grid-feedback">
+          <div>
+            <span style={{ fontSize: 11, fontWeight: "bold", color: "#6b7280" }}>Strengths:</span>
+            <textarea className="ca" style={{ minHeight: 60, marginTop: 4, marginBottom: 0 }} value={feedback360.directReportStrengths} onChange={e => setFeedback360(prev => ({ ...prev, directReportStrengths: e.target.value }))} placeholder="Direct reports' observations on key strengths..." />
+          </div>
+          <div>
+            <span style={{ fontSize: 11, fontWeight: "bold", color: "#6b7280" }}>Areas for improvement:</span>
+            <textarea className="ca" style={{ minHeight: 60, marginTop: 4, marginBottom: 0 }} value={feedback360.directReportImprovements} onChange={e => setFeedback360(prev => ({ ...prev, directReportImprovements: e.target.value }))} placeholder="Direct reports' observations on areas for growth..." />
+          </div>
+        </div>
+
+        {/* Section 6 — Overall Summary */}
+        <div className="sec">6. OVERALL PERFORMANCE SUMMARY</div>
         <table>
           <tbody>
             <tr>
@@ -519,7 +578,7 @@ export default function HumanResourceCoordinatorForm() {
         </ol>
 
         {/* Section 6 — Development Plan */}
-        <div className="sec">6. DEVELOPMENT PLAN</div>
+        <div className="sec">7. DEVELOPMENT PLAN</div>
         <table>
           <thead><tr><th>Development Area</th><th>Action Plan</th><th>Timeline</th><th>Support Required</th></tr></thead>
           <tbody>
@@ -535,7 +594,7 @@ export default function HumanResourceCoordinatorForm() {
         </table>
 
         {/* Section 7 — Final Comments */}
-        <div className="sec">7. FINAL COMMENTS</div>
+        <div className="sec">8. FINAL COMMENTS</div>
         <p className="sh" style={{ marginTop: 6 }}>Employee Comments:</p>
         <textarea className="ca" value={employeeComments} onChange={e => setEmployeeComments(e.target.value)} />
         <p className="sh">Reviewer Comments:</p>
