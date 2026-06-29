@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
-import { getSubmissions, deleteSubmission } from "../store";
+import { getSubmissions, deleteSubmission, syncWithSupabase } from "../store";
 import type { Submission } from "../store";
+import { getSupabaseClient } from "../supabase";
 
 const TEAL = "#4C808A";
 const NAVY = "#16294A";
@@ -45,11 +46,30 @@ export default function AdminDashboard() {
   const [search, setSearch] = useState("");
   const [positionFilter, setPositionFilter] = useState("All");
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
+  const [syncStatus, setSyncStatus] = useState<"offline" | "syncing" | "synced" | "error">("offline");
 
   function load() {
     setSubmissions(getSubmissions().sort((a, b) => b.submittedAt.localeCompare(a.submittedAt)));
   }
-  useEffect(() => { load(); }, []);
+
+  useEffect(() => {
+    load();
+    const hasClient = getSupabaseClient() !== null;
+    if (hasClient) {
+      setSyncStatus("syncing");
+      syncWithSupabase()
+        .then((synchronizedSubmissions) => {
+          setSubmissions(synchronizedSubmissions.sort((a, b) => b.submittedAt.localeCompare(a.submittedAt)));
+          setSyncStatus("synced");
+        })
+        .catch((err) => {
+          console.error("Dashboard sync error:", err);
+          setSyncStatus("error");
+        });
+    } else {
+      setSyncStatus("offline");
+    }
+  }, []);
 
   const positions = ["All", ...Array.from(new Set(submissions.map(s => s.position).filter(Boolean)))];
 
@@ -97,7 +117,24 @@ export default function AdminDashboard() {
       <div style={{ maxWidth: 1200, margin: "0 auto" }}>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 28, flexWrap: "wrap", gap: 12 }}>
           <div>
-            <h1 style={{ margin: 0, fontSize: 22, fontWeight: "bold", color: NAVY }}>Admin Dashboard</h1>
+            <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
+              <h1 style={{ margin: 0, fontSize: 22, fontWeight: "bold", color: NAVY }}>Admin Dashboard</h1>
+              {syncStatus === "syncing" && (
+                <span style={{ fontSize: 11, background: "#fef3c7", color: "#d97706", border: "1px solid #fde68a", padding: "2px 8px", borderRadius: 12, fontWeight: "bold", display: "flex", alignItems: "center", gap: 4 }}>
+                  <span style={{ width: 6, height: 6, background: "#d97706", borderRadius: "50%", display: "inline-block" }}></span> Syncing...
+                </span>
+              )}
+              {syncStatus === "synced" && (
+                <span style={{ fontSize: 11, background: "#dcfce7", color: "#15803d", border: "1px solid #bbf7d0", padding: "2px 8px", borderRadius: 12, fontWeight: "bold", display: "flex", alignItems: "center", gap: 4 }}>
+                  <span style={{ width: 6, height: 6, background: "#15803d", borderRadius: "50%", display: "inline-block" }}></span> Supabase Connected
+                </span>
+              )}
+              {syncStatus === "error" && (
+                <span style={{ fontSize: 11, background: "#fee2e2", color: "#b91c1c", border: "1px solid #fca5a5", padding: "2px 8px", borderRadius: 12, fontWeight: "bold", display: "flex", alignItems: "center", gap: 4 }}>
+                  <span style={{ width: 6, height: 6, background: "#b91c1c", borderRadius: "50%", display: "inline-block" }}></span> Sync Connection Error
+                </span>
+              )}
+            </div>
             <p style={{ margin: "4px 0 0", fontSize: 12, color: "#6b7280" }}>Manage all submitted performance appraisals</p>
           </div>
         </div>

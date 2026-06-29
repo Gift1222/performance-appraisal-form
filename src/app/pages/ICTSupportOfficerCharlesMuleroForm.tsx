@@ -1,6 +1,6 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { toast, Toaster } from "sonner";
-import { saveSubmission, replaceSubmission, findSubmissionByName } from "../store";
+import { saveSubmission, replaceSubmission, findSubmissionByName, getPeerFeedbackForRole } from "../store";
 import type { Dimension, CoreValue, DevPlanRow } from "../store";
 import emergeLogo from "@/imports/emerge-logo.png";
 
@@ -126,7 +126,7 @@ function SignatureUpload({ value, onChange }: { value: string | null; onChange: 
 export default function ICTSupportOfficerCharlesMuleroForm() {
   const [employeeId, setEmployeeId] = useState("");
   const [employeeName, setEmployeeName] = useState("");
-  const [position, setPosition] = useState("ICT Support Officer");
+  const [position, setPosition] = useState("ICT Support Officer - Charles Mulero");
   const [reviewPeriod, setReviewPeriod] = useState("");
   const [appraisalDate, setAppraisalDate] = useState("");
   const [reviewers, setReviewers] = useState("");
@@ -151,6 +151,15 @@ export default function ICTSupportOfficerCharlesMuleroForm() {
     directReportImprovements: "",
   });
   const [errors, setErrors] = useState<Record<string, boolean>>({});
+
+  useEffect(() => {
+    const peerData = getPeerFeedbackForRole(position);
+    setFeedback360(prev => ({
+      ...prev,
+      peerStrengths: peerData.strengths,
+      peerImprovements: peerData.improvements,
+    }));
+  }, [position]);
   const [duplicateModal, setDuplicateModal] = useState<{ existingId: string; payload: ReturnType<typeof buildPayload> } | null>(null);
   const formTopRef = useRef<HTMLDivElement>(null);
 
@@ -191,7 +200,7 @@ export default function ICTSupportOfficerCharlesMuleroForm() {
   }
 
   function resetForm() {
-    setEmployeeId(""); setEmployeeName(""); setPosition("ICT Support Officer"); setReviewPeriod(""); setAppraisalDate(""); setReviewers("");
+    setEmployeeId(""); setEmployeeName(""); setPosition("ICT Support Officer - Charles Mulero"); setReviewPeriod(""); setAppraisalDate(""); setReviewers("");
     setDims(INITIAL_DIMENSIONS); setCoreValues(INITIAL_CORE_VALUES);
     setOverallRating(""); setAchievements(["", "", ""]); setDevelopments(["", "", ""]);
     setDevPlan(BLANK_DEVPLAN); setEmployeeComments(""); setReviewerComments("");
@@ -249,10 +258,19 @@ export default function ICTSupportOfficerCharlesMuleroForm() {
     if (!employeeSignDate) newErrors["employeeSignDate"] = true;
     if (!reviewerSignDate) newErrors["reviewerSignDate"] = true;
 
+    // Validate Section 5 Peer Feedback (Must be filled via Peer Feedback Form)
+    if (!feedback360.peerStrengths.trim() || !feedback360.peerImprovements.trim()) {
+      newErrors["peerFeedback"] = true;
+    }
+
     setErrors(newErrors);
 
     if (Object.keys(newErrors).length > 0) {
-      toast.error("Please complete all required fields before submitting.");
+      if (newErrors["peerFeedback"]) {
+        toast.error("You cannot submit an incomplete form. Section 5 (Peer Feedback) must be completed via the Peer Feedback Form.");
+      } else {
+        toast.error("Please complete all required fields before submitting.");
+      }
       formTopRef.current?.scrollIntoView({ behavior: "smooth" });
       return;
     }
@@ -321,7 +339,7 @@ export default function ICTSupportOfficerCharlesMuleroForm() {
             <img src={emergeLogo} alt="Emerge Livelihoods" style={{ maxHeight: 130, maxWidth: 420, objectFit: "contain" }} />
           </div>
           <p className="title">360-DEGREE PERFORMANCE APPRAISAL FORM</p>
-          <p className="subtitle">ICT Support Officer</p>
+          <p className="subtitle">ICT Support Officer (Charles Mulero)</p>
         </div>
 
         {/* Info */}
@@ -511,11 +529,11 @@ export default function ICTSupportOfficerCharlesMuleroForm() {
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 12 }} className="grid-feedback">
           <div>
             <span style={{ fontSize: 11, fontWeight: "bold", color: "#6b7280" }}>Strengths:</span>
-            <textarea className="ca" style={{ minHeight: 60, marginTop: 4, marginBottom: 0 }} value={feedback360.peerStrengths} onChange={e => setFeedback360(prev => ({ ...prev, peerStrengths: e.target.value }))} placeholder="Peers' observations on key strengths..." />
+            <textarea readOnly className="ca" style={{ minHeight: 60, marginTop: 4, marginBottom: 0, backgroundColor: "#f1f5f9", cursor: "not-allowed" }} value={feedback360.peerStrengths} placeholder="Peers' observations on key strengths (populated automatically from Peer Feedback Form)..." />
           </div>
           <div>
             <span style={{ fontSize: 11, fontWeight: "bold", color: "#6b7280" }}>Areas for improvement:</span>
-            <textarea className="ca" style={{ minHeight: 60, marginTop: 4, marginBottom: 0 }} value={feedback360.peerImprovements} onChange={e => setFeedback360(prev => ({ ...prev, peerImprovements: e.target.value }))} placeholder="Peers' observations on areas for growth..." />
+            <textarea readOnly className="ca" style={{ minHeight: 60, marginTop: 4, marginBottom: 0, backgroundColor: "#f1f5f9", cursor: "not-allowed" }} value={feedback360.peerImprovements} placeholder="Peers' observations on areas for growth (populated automatically from Peer Feedback Form)..." />
           </div>
         </div>
 

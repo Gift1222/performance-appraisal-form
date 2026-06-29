@@ -1,6 +1,6 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { toast, Toaster } from "sonner";
-import { saveSubmission, replaceSubmission, findSubmissionByName } from "../store";
+import { saveSubmission, replaceSubmission, findSubmissionByName, getPeerFeedbackForRole } from "../store";
 import type { Dimension, CoreValue, DevPlanRow } from "../store";
 import emergeLogo from "@/imports/emerge-logo.png";
 
@@ -156,6 +156,15 @@ export default function IPAInvestmentPortfolioAnalystForm() {
     directReportImprovements: "",
   });
   const [errors, setErrors] = useState<Record<string, boolean>>({});
+
+  useEffect(() => {
+    const peerData = getPeerFeedbackForRole(position);
+    setFeedback360(prev => ({
+      ...prev,
+      peerStrengths: peerData.strengths,
+      peerImprovements: peerData.improvements,
+    }));
+  }, [position]);
   const [duplicateModal, setDuplicateModal] = useState<{ existingId: string; payload: ReturnType<typeof buildPayload> } | null>(null);
   const formTopRef = useRef<HTMLDivElement>(null);
 
@@ -254,10 +263,19 @@ export default function IPAInvestmentPortfolioAnalystForm() {
     if (!employeeSignDate) newErrors["employeeSignDate"] = true;
     if (!reviewerSignDate) newErrors["reviewerSignDate"] = true;
 
+    // Validate Section 5 Peer Feedback (Must be filled via Peer Feedback Form)
+    if (!feedback360.peerStrengths.trim() || !feedback360.peerImprovements.trim()) {
+      newErrors["peerFeedback"] = true;
+    }
+
     setErrors(newErrors);
 
     if (Object.keys(newErrors).length > 0) {
-      toast.error("Please complete all required fields before submitting.");
+      if (newErrors["peerFeedback"]) {
+        toast.error("You cannot submit an incomplete form. Section 5 (Peer Feedback) must be completed via the Peer Feedback Form.");
+      } else {
+        toast.error("Please complete all required fields before submitting.");
+      }
       formTopRef.current?.scrollIntoView({ behavior: "smooth" });
       return;
     }
@@ -516,11 +534,11 @@ export default function IPAInvestmentPortfolioAnalystForm() {
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 12 }} className="grid-feedback">
           <div>
             <span style={{ fontSize: 11, fontWeight: "bold", color: "#6b7280" }}>Strengths:</span>
-            <textarea className="ca" style={{ minHeight: 60, marginTop: 4, marginBottom: 0 }} value={feedback360.peerStrengths} onChange={e => setFeedback360(prev => ({ ...prev, peerStrengths: e.target.value }))} placeholder="Peers' observations on key strengths..." />
+            <textarea readOnly className="ca" style={{ minHeight: 60, marginTop: 4, marginBottom: 0, backgroundColor: "#f1f5f9", cursor: "not-allowed" }} value={feedback360.peerStrengths} placeholder="Peers' observations on key strengths (populated automatically from Peer Feedback Form)..." />
           </div>
           <div>
             <span style={{ fontSize: 11, fontWeight: "bold", color: "#6b7280" }}>Areas for improvement:</span>
-            <textarea className="ca" style={{ minHeight: 60, marginTop: 4, marginBottom: 0 }} value={feedback360.peerImprovements} onChange={e => setFeedback360(prev => ({ ...prev, peerImprovements: e.target.value }))} placeholder="Peers' observations on areas for growth..." />
+            <textarea readOnly className="ca" style={{ minHeight: 60, marginTop: 4, marginBottom: 0, backgroundColor: "#f1f5f9", cursor: "not-allowed" }} value={feedback360.peerImprovements} placeholder="Peers' observations on areas for growth (populated automatically from Peer Feedback Form)..." />
           </div>
         </div>
 
