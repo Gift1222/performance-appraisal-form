@@ -328,6 +328,9 @@
 
 /* Print Overrides so print styles don't conflict with mobile overrides */
 @media print {
+  nav, .no-print {
+    display: none !important;
+  }
   .af {
     padding: 0 !important;
     border: none !important;

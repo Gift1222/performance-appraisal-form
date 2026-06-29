@@ -18,7 +18,7 @@ export default function Layout() {
   return (
     <div style={{ minHeight: "100vh", background: "#f0f4f5", fontFamily: "Verdana, Geneva, sans-serif" }}>
       {location.pathname !== "/peer-feedback" && (
-        <nav style={{
+        <nav className="no-print" style={{
           background: "#fff",
           borderBottom: "3px solid #4C808A",
           padding: "0 32px",

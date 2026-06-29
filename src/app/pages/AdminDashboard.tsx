@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
-import { getSubmissions, deleteSubmission, syncWithSupabase } from "../store";
-import type { Submission } from "../store";
+import { getSubmissions, deleteSubmission, syncWithSupabase, getPeerFeedbacks, deletePeerFeedback } from "../store";
+import type { Submission, PeerFeedback } from "../store";
 import { getSupabaseClient } from "../supabase";
 
 const TEAL = "#4C808A";
@@ -43,13 +43,16 @@ function formatDate(iso: string) {
 export default function AdminDashboard() {
   const navigate = useNavigate();
   const [submissions, setSubmissions] = useState<Submission[]>([]);
+  const [peerFeedbacks, setPeerFeedbacks] = useState<PeerFeedback[]>([]);
   const [search, setSearch] = useState("");
   const [positionFilter, setPositionFilter] = useState("All");
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
+  const [confirmDeletePeer, setConfirmDeletePeer] = useState<string | null>(null);
   const [syncStatus, setSyncStatus] = useState<"offline" | "syncing" | "synced" | "error">("offline");
 
   function load() {
     setSubmissions(getSubmissions().sort((a, b) => b.submittedAt.localeCompare(a.submittedAt)));
+    setPeerFeedbacks(getPeerFeedbacks().sort((a, b) => b.submittedAt.localeCompare(a.submittedAt)));
   }
 
   useEffect(() => {
@@ -160,9 +163,12 @@ export default function AdminDashboard() {
           <div className="stat-card">
             <div className="num" style={{ color: "#15803d" }}>
               {(() => {
-                const rated = submissions.filter(s => s.overallRating);
+                const rated = submissions.filter(s => avgRating(s) !== null);
                 if (!rated.length) return "—";
-                const tops = rated.filter(s => s.overallRating === "Exceptional" || s.overallRating === "Exceeds Expectations");
+                const tops = rated.filter(s => {
+                  const score = avgRating(s);
+                  return score !== null && parseFloat(score) >= 4.0;
+                });
                 return Math.round((tops.length / rated.length) * 100) + "%";
               })()}
             </div>
@@ -180,7 +186,10 @@ export default function AdminDashboard() {
           </div>
           <div className="stat-card">
             <div className="num" style={{ color: "#b91c1c" }}>
-              {submissions.filter(s => s.overallRating === "Needs Improvement" || s.overallRating === "Unsatisfactory").length}
+              {submissions.filter(s => {
+                const score = avgRating(s);
+                return score !== null && parseFloat(score) <= 3.4;
+              }).length}
             </div>
             <div className="lbl" style={{ color: "#b91c1c" }}>Needs Intervention</div>
           </div>
@@ -194,7 +203,10 @@ export default function AdminDashboard() {
               <InterventionIcon /> Needs Intervention
             </h3>
             {(() => {
-              const list = submissions.filter(s => s.overallRating === "Needs Improvement" || s.overallRating === "Unsatisfactory");
+              const list = submissions.filter(s => {
+                const score = avgRating(s);
+                return score !== null && parseFloat(score) <= 3.4;
+              });
               if (!list.length) return <div style={{ fontSize: 12, color: "#6b7280" }}>No records found.</div>;
               return (
                 <div style={{ overflowX: "auto" }}>
@@ -229,8 +241,10 @@ export default function AdminDashboard() {
               <TopPerformerIcon /> Top Performers
             </h3>
             {(() => {
-              const list = submissions.filter(s => s.overallRating === "Exceptional" || s.overallRating === "Exceeds Expectations")
-                                      .sort((a, b) => parseFloat(avgRating(b) || "0") - parseFloat(avgRating(a) || "0"));
+              const list = submissions.filter(s => {
+                const score = avgRating(s);
+                return score !== null && parseFloat(score) >= 4.0;
+              }).sort((a, b) => parseFloat(avgRating(b) || "0") - parseFloat(avgRating(a) || "0"));
               if (!list.length) return <div style={{ fontSize: 12, color: "#6b7280" }}>No records found.</div>;
               return (
                 <div style={{ overflowX: "auto" }}>
@@ -262,14 +276,14 @@ export default function AdminDashboard() {
           {/* Core Values Champions */}
           <div style={{ background: "#ffffff", border: `2px solid ${TEAL}`, borderRadius: 10, padding: "16px 20px", boxShadow: "0 1px 4px rgba(76,128,138,0.05)" }}>
             <h3 style={{ margin: "0 0 12px", color: "#b45309", fontSize: 14, display: "flex", alignItems: "center", gap: 6 }}>
-              <HandshakeIcon /> Values Alignment (Avg ≥ 4)
+              <HandshakeIcon /> Values Alignment (Avg ≥ 3.0)
             </h3>
             {(() => {
               const list = submissions.filter(s => {
                 const cvs = s.coreValues.map(cv => parseInt(cv.rating) || 0).filter(r => r > 0);
                 if (!cvs.length) return false;
                 const cvAvg = cvs.reduce((a, b) => a + b, 0) / cvs.length;
-                return cvAvg >= 4;
+                return cvAvg >= 3.0;
               }).sort((a, b) => {
                 const cvsA = a.coreValues.map(cv => parseInt(cv.rating) || 0).filter(r => r > 0);
                 const cvsB = b.coreValues.map(cv => parseInt(cv.rating) || 0).filter(r => r > 0);
@@ -345,7 +359,7 @@ export default function AdminDashboard() {
                   <th>Employee</th>
                   <th>Position</th>
                   <th>Review Period</th>
-                  <th>Reviewer(s)</th>
+                  <th>Line Manager</th>
                   <th style={{ textAlign: "center" }}>360°</th>
                   <th>Overall Rating</th>
                   <th style={{ textAlign: "center" }}>Dims</th>
@@ -394,6 +408,57 @@ export default function AdminDashboard() {
             </table>
           </div>
         )}
+
+        {/* Peer Feedback Section */}
+        <div style={{ marginTop: 40, background: "#ffffff", borderRadius: 10, border: `2px solid ${TEAL}`, overflow: "hidden", boxShadow: "0 1px 4px rgba(76,128,138,0.08)" }}>
+          <div style={{ background: NAVY, padding: "14px 20px", color: "#fff", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <h2 style={{ margin: 0, fontSize: 16, fontWeight: "bold", fontFamily: "Verdana, Geneva, sans-serif" }}>Peer Feedback Submissions (360°)</h2>
+            <span style={{ fontSize: 12, background: TEAL, padding: "2px 8px", borderRadius: 10, fontWeight: "bold" }}>{peerFeedbacks.length} Feedback(s)</span>
+          </div>
+          <div style={{ padding: 20 }}>
+            <p style={{ margin: "0 0 16px 0", fontSize: 12.5, color: "#4b5563" }}>
+              Peer feedback entries provided anonymously or specifically for employees/roles. Deleting an entry will permanently remove it from the consolidated feedback.
+            </p>
+            {peerFeedbacks.length === 0 ? (
+              <div style={{ textAlign: "center", padding: "24px 0", color: "#9ca3af", fontSize: 13 }}>No peer feedback submissions have been made yet.</div>
+            ) : (
+              <div style={{ overflowX: "auto" }}>
+                <table className="admin-table">
+                  <thead>
+                    <tr>
+                      <th style={{ width: "20%" }}>Target Position / Employee</th>
+                      <th style={{ width: "35%" }}>Strengths</th>
+                      <th style={{ width: "35%" }}>Areas for Improvement</th>
+                      <th style={{ width: "10%" }}>Submitted At</th>
+                      <th style={{ width: "10%", textAlign: "center" }}>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {peerFeedbacks.map(pf => (
+                      <tr key={pf.id}>
+                        <td style={{ fontWeight: "bold", color: NAVY }}>{pf.role}</td>
+                        <td>
+                          <div style={{ whiteSpace: "pre-wrap", maxHeight: "100px", overflowY: "auto", fontSize: "11.5px", color: "#374151" }}>
+                            {pf.strengths}
+                          </div>
+                        </td>
+                        <td>
+                          <div style={{ whiteSpace: "pre-wrap", maxHeight: "100px", overflowY: "auto", fontSize: "11.5px", color: "#374151" }}>
+                            {pf.improvements}
+                          </div>
+                        </td>
+                        <td style={{ fontSize: "11px", whiteSpace: "nowrap" }}>{formatDate(pf.submittedAt)}</td>
+                        <td style={{ textAlign: "center" }}>
+                          <button className="admin-btn btn-del" onClick={() => setConfirmDeletePeer(pf.id)}>Delete</button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+        </div>
       </div>
 
       {/* Delete Confirm Modal */}
@@ -406,6 +471,27 @@ export default function AdminDashboard() {
             <div style={{ display: "flex", gap: 12, justifyContent: "center" }}>
               <button onClick={() => setConfirmDelete(null)} style={{ padding: "9px 24px", border: "1px solid #d1d5db", borderRadius: 6, background: "#fff", cursor: "pointer", fontFamily: "Verdana, Geneva, sans-serif", fontSize: 13 }}>Cancel</button>
               <button onClick={() => handleDelete(confirmDelete)} style={{ padding: "9px 24px", border: "none", borderRadius: 6, background: "#dc2626", color: "#fff", cursor: "pointer", fontFamily: "Verdana, Geneva, sans-serif", fontSize: 13, fontWeight: "bold" }}>Delete</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Peer Feedback Confirm Modal */}
+      {confirmDeletePeer && (
+        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.45)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 200 }}>
+          <div style={{ background: "#ffffff", border: `2px solid ${TEAL}`, borderRadius: 10, padding: "32px 36px", maxWidth: 400, width: "90%", textAlign: "center", boxShadow: "0 8px 32px rgba(0,0,0,0.18)" }}>
+            <div style={{ fontSize: 36, marginBottom: 12 }}>⚠️</div>
+            <h2 style={{ margin: "0 0 8px", fontSize: 18, color: TEAL }}>Delete Peer Feedback?</h2>
+            <p style={{ fontSize: 13, color: TEAL, margin: "0 0 24px" }}>This action cannot be undone. This peer feedback entry will be permanently removed.</p>
+            <div style={{ display: "flex", gap: 12, justifyContent: "center" }}>
+              <button onClick={() => setConfirmDeletePeer(null)} style={{ padding: "9px 24px", border: "1px solid #d1d5db", borderRadius: 6, background: "#fff", cursor: "pointer", fontFamily: "Verdana, Geneva, sans-serif", fontSize: 13 }}>Cancel</button>
+              <button onClick={() => {
+                if (confirmDeletePeer) {
+                  deletePeerFeedback(confirmDeletePeer);
+                  setConfirmDeletePeer(null);
+                  load();
+                }
+              }} style={{ padding: "9px 24px", border: "none", borderRadius: 6, background: "#dc2626", color: "#fff", cursor: "pointer", fontFamily: "Verdana, Geneva, sans-serif", fontSize: 13, fontWeight: "bold" }}>Delete</button>
             </div>
           </div>
         </div>

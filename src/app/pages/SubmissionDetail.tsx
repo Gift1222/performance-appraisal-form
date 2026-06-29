@@ -66,6 +66,16 @@ export default function SubmissionDetail() {
     if (id) setS(getSubmission(id) || null);
   }, [id]);
 
+  const handlePrint = () => {
+    try {
+      window.focus();
+      window.print();
+    } catch (err) {
+      console.error("Print failed:", err);
+      toast.error("Standard print dialog was blocked or failed. Please try the 'Export to PDF' option instead, or open this app in a new tab to print.");
+    }
+  };
+
   async function exportToPDF() {
     if (!contentRef.current || !s) return;
     setExporting(true);
@@ -127,7 +137,7 @@ export default function SubmissionDetail() {
       console.error("PDF export error:", err);
       // Fallback: open print dialog
       toast.info("Switching to print dialog — choose 'Save as PDF' from your printer options.");
-      setTimeout(() => window.print(), 300);
+      setTimeout(() => handlePrint(), 300);
     } finally {
       setExporting(false);
     }
@@ -166,14 +176,7 @@ export default function SubmissionDetail() {
         {/* Top bar */}
         <div className="no-print" style={{ display: "flex", gap: 12, marginBottom: 24, flexWrap: "wrap", alignItems: "center" }}>
           <button onClick={() => navigate("/admin")} style={backBtnStyle}>Back to Dashboard</button>
-          <button onClick={() => window.print()} style={{ ...backBtnStyle, background: TEAL, color: "#fff", borderColor: TEAL }}>Print</button>
-          <button
-            onClick={exportToPDF}
-            disabled={exporting}
-            style={{ ...backBtnStyle, background: "#16294A", color: "#fff", borderColor: "#16294A", opacity: exporting ? 0.7 : 1, cursor: exporting ? "wait" : "pointer" }}
-          >
-            {exporting ? "Exporting…" : "Export to PDF"}
-          </button>
+          <button onClick={handlePrint} style={{ ...backBtnStyle, background: TEAL, color: "#fff", borderColor: TEAL }}>Save as PDF</button>
           <span style={{ marginLeft: "auto", fontSize: 11, color: "#9ca3af" }}>Submitted: {formatDateTime(s.submittedAt)}</span>
         </div>
 
@@ -182,7 +185,7 @@ export default function SubmissionDetail() {
 
           {/* Header */}
           <div style={{ textAlign: "center", borderBottom: `3px solid ${TEAL}`, paddingBottom: 16, marginBottom: 28 }}>
-            <img src={emergeLogo} alt="Emerge Livelihoods" style={{ maxHeight: 100, maxWidth: 320, objectFit: "contain", marginBottom: 12 }} />
+            <img src={emergeLogo} alt="Emerge Livelihoods" style={{ maxHeight: 100, maxWidth: 320, objectFit: "contain", marginBottom: 12, display: "block", margin: "0 auto" }} />
             <h1 style={{ margin: 0, fontSize: 24, fontWeight: "bold", color: TEAL }}>360-DEGREE PERFORMANCE APPRAISAL FORM</h1>
             <p style={{ margin: "4px 0 0", fontSize: 15, fontWeight: "bold", color: "#555" }}>{s.position}</p>
           </div>
@@ -218,7 +221,7 @@ export default function SubmissionDetail() {
                 <td className="lbl">Appraisal Date</td><td>{formatDate(s.appraisalDate)}</td>
               </tr>
               <tr>
-                <td className="lbl">Reviewer(s)</td><td colSpan={3}>{s.reviewers || "—"}</td>
+                <td className="lbl">Line Manager</td><td colSpan={3}>{s.reviewers || "—"}</td>
               </tr>
             </tbody>
           </table>
@@ -377,7 +380,7 @@ export default function SubmissionDetail() {
           <div style={{ border: "1px solid #d1d5db", borderRadius: 6, padding: "10px 14px", fontSize: 13, color: s.employeeComments ? "#222" : "#9ca3af", marginBottom: 18, minHeight: 60, background: "#fafafa" }}>
             {s.employeeComments || "No comments provided."}
           </div>
-          <p style={{ fontWeight: "bold", color: NAVY, fontSize: 13, margin: "0 0 6px" }}>Reviewer Comments</p>
+          <p style={{ fontWeight: "bold", color: NAVY, fontSize: 13, margin: "0 0 6px" }}>Line Manager Comments</p>
           <div style={{ border: "1px solid #d1d5db", borderRadius: 6, padding: "10px 14px", fontSize: 13, color: s.reviewerComments ? "#222" : "#9ca3af", marginBottom: 24, minHeight: 60, background: "#fafafa" }}>
             {s.reviewerComments || "No comments provided."}
           </div>
@@ -387,7 +390,7 @@ export default function SubmissionDetail() {
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24 }}>
             {[
               { label: "Employee Signature", sig: s.employeeSignature, date: s.employeeSignDate },
-              { label: "Reviewer Signature", sig: s.reviewerSignature, date: s.reviewerSignDate },
+              { label: "Line Manager Signature", sig: s.reviewerSignature, date: s.reviewerSignDate },
             ].map(({ label, sig, date }) => (
               <div key={label} style={{ background: "#ffffff", border: `2px solid ${TEAL}`, borderRadius: 8, padding: "16px 20px" }}>
                 <p style={{ fontWeight: "bold", color: TEAL, fontSize: 12, margin: "0 0 12px" }}>{label}</p>

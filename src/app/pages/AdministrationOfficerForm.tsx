@@ -3,6 +3,7 @@ import { toast, Toaster } from "sonner";
 import { saveSubmission, replaceSubmission, findSubmissionByName, getPeerFeedbackForRole } from "../store";
 import type { Dimension, CoreValue, DevPlanRow } from "../store";
 import emergeLogo from "@/imports/emerge-logo.png";
+import { useFormDraft } from "../hooks/useFormDraft";
 
 // ─── Administration Officer dimension config ─────────────────────────────────
 const INITIAL_DIMENSIONS: Dimension[] = [
@@ -151,6 +152,18 @@ export default function AdministrationOfficerForm() {
   });
   const [errors, setErrors] = useState<Record<string, boolean>>({});
 
+  const { clearDraft } = useFormDraft("administration-officer", {
+    employeeId, employeeName, position, reviewPeriod, appraisalDate, reviewers,
+    dims, coreValues, overallRating, achievements, developments, devPlan,
+    employeeComments, reviewerComments, employeeSignature, reviewerSignature,
+    employeeSignDate, reviewerSignDate, feedback360
+  }, {
+    setEmployeeId, setEmployeeName, setPosition, setReviewPeriod, setAppraisalDate, setReviewers,
+    setDims, setCoreValues, setOverallRating, setAchievements, setDevelopments, setDevPlan,
+    setEmployeeComments, setReviewerComments, setEmployeeSignature, setReviewerSignature,
+    setEmployeeSignDate, setReviewerSignDate, setFeedback360
+  });
+
   useEffect(() => {
     const peerData = getPeerFeedbackForRole(position);
     setFeedback360(prev => ({
@@ -213,6 +226,7 @@ export default function AdministrationOfficerForm() {
       directReportImprovements: "",
     });
     setErrors({});
+    clearDraft();
   }
 
   function handleConfirmReplace() {
@@ -384,7 +398,7 @@ export default function AdministrationOfficerForm() {
               </td>
             </tr>
             <tr>
-              <td className="lbl">Reviewer(s)<span className="req">*</span></td>
+              <td className="lbl">Line Manager<span className="req">*</span></td>
               <td className={`val${errors["reviewers"] ? " field-err" : ""}`} colSpan={3}>
                 <input type="text" value={reviewers} onChange={e => { setReviewers(e.target.value); setErrors(p => ({ ...p, reviewers: false })); }} />
                 {errors["reviewers"] && <span className="err-badge">Required</span>}
@@ -614,7 +628,7 @@ export default function AdministrationOfficerForm() {
         <div className="sec">8. FINAL COMMENTS</div>
         <p className="sh" style={{ marginTop: 6 }}>Employee Comments:</p>
         <textarea className="ca" value={employeeComments} onChange={e => setEmployeeComments(e.target.value)} />
-        <p className="sh">Reviewer Comments:</p>
+        <p className="sh">Line Manager Comments:</p>
         <textarea className="ca" value={reviewerComments} onChange={e => setReviewerComments(e.target.value)} />
 
         {/* Signatures */}
@@ -629,7 +643,7 @@ export default function AdministrationOfficerForm() {
             </span>
           </div>
           <div className="sig-line">
-            <span className="slbl">Reviewer Signature:</span>
+            <span className="slbl">Line Manager Signature:</span>
             <SignatureUpload value={reviewerSignature} onChange={setReviewerSignature} />
             <span className="slbl" style={{ minWidth: 50 }}>Date<span className="req">*</span>:</span>
             <span className={`su${errors["reviewerSignDate"] ? " field-err" : ""}`} style={{ maxWidth: 160 }}>

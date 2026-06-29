@@ -140,6 +140,11 @@ export function savePeerFeedbackLocal(pf: PeerFeedback): void {
   localStorage.setItem(PEER_KEY, JSON.stringify(all));
 }
 
+export function deletePeerFeedback(id: string): void {
+  const filtered = getPeerFeedbacks().filter((item) => item.id !== id);
+  localStorage.setItem(PEER_KEY, JSON.stringify(filtered));
+}
+
 export function getPeerFeedbackForRole(role: string): { strengths: string; improvements: string } {
   const list = getPeerFeedbacks().filter(
     (item) => item.role.trim().toLowerCase() === role.trim().toLowerCase()

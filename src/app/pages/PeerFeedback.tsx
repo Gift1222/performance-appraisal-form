@@ -3,6 +3,7 @@ import { useSearchParams } from "react-router";
 import { toast, Toaster } from "sonner";
 import { savePeerFeedback } from "../store";
 import emergeLogo from "@/imports/emerge-logo.png";
+import { useFormDraft } from "../hooks/useFormDraft";
 
 const TEAL = "#4C808A";
 const NAVY = "#16294A";
@@ -34,6 +35,12 @@ export default function PeerFeedback() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<Record<string, boolean>>({});
 
+  const { clearDraft } = useFormDraft("peer-feedback", {
+    role, strengths, improvements
+  }, {
+    setRole, setStrengths, setImprovements
+  });
+
   // Pre-select role if specified in search query (?role=...)
   useEffect(() => {
     const roleParam = searchParams.get("role");
@@ -60,6 +67,7 @@ export default function PeerFeedback() {
     try {
       setIsSubmitting(true);
       await savePeerFeedback(role, strengths.trim(), improvements.trim());
+      clearDraft();
       setSubmitted(true);
       toast.success("Peer feedback submitted successfully!");
     } catch (err) {
