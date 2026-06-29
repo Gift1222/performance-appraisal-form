@@ -14,8 +14,10 @@ export function useFormDraft(
       try {
         const parsed = JSON.parse(saved);
         Object.keys(parsed).forEach((key) => {
-          if (setters[key] && parsed[key] !== undefined) {
-            setters[key](parsed[key]);
+          const setterName = "set" + key.charAt(0).toUpperCase() + key.slice(1);
+          const setter = setters[key] || setters[setterName];
+          if (setter && parsed[key] !== undefined) {
+            setter(parsed[key]);
           }
         });
       } catch (e) {
