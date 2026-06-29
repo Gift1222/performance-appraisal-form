@@ -19,6 +19,7 @@ import PLOProcurementLogisticsOfficerForm from "./pages/PLOProcurementLogisticsO
 import AdminLogin from "./pages/AdminLogin";
 import AdminDashboard from "./pages/AdminDashboard";
 import SubmissionDetail from "./pages/SubmissionDetail";
+import PeerFeedback from "./pages/PeerFeedback";
 
 export const router = createBrowserRouter([
   {
@@ -40,6 +41,7 @@ export const router = createBrowserRouter([
       { path: "ipa-investment-portfolio-analyst", Component: IPAInvestmentPortfolioAnalystForm },
       { path: "tl-sel-team-leader-sustainable-entrepreneurship", Component: TLSELTeamLeaderSustainableEntrepreneurshipForm },
       { path: "plo-procurement-logistics-officer", Component: PLOProcurementLogisticsOfficerForm },
+      { path: "peer-feedback", Component: PeerFeedback },
       { path: "admin/login", Component: AdminLogin },
       {
         Component: RequireAuth,
