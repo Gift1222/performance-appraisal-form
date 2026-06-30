@@ -56,6 +56,7 @@ export default function AdminDashboard() {
   }
 
   useEffect(() => {
+    document.title = "Admin Dashboard — Emerge Livelihoods";
     load();
     const hasClient = getSupabaseClient() !== null;
     if (hasClient) {

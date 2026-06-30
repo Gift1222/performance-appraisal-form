@@ -170,6 +170,7 @@ export default function ProgramsDirectorForm() {
   });
 
   useEffect(() => {
+    document.title = "Programs Director Performance Appraisal Form";
     const peerData = getPeerFeedbackForRole(position);
     setFeedback360(prev => ({
       ...prev,

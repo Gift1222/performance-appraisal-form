@@ -177,6 +177,7 @@ export default function MEALCoordinatorForm() {
   });
 
   useEffect(() => {
+    document.title = "MEAL Coordinator Performance Appraisal Form";
     const peerData = getPeerFeedbackForRole(position);
     setFeedback360(prev => ({
       ...prev,

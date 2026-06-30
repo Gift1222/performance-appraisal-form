@@ -63,7 +63,17 @@ export default function SubmissionDetail() {
   const contentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (id) setS(getSubmission(id) || null);
+    if (id) {
+      const sub = getSubmission(id) || null;
+      setS(sub);
+      if (sub) {
+        document.title = `${sub.employeeName} — ${sub.position} Appraisal — Emerge Livelihoods`;
+      } else {
+        document.title = "Submission Detail — Emerge Livelihoods";
+      }
+    } else {
+      document.title = "Submission Detail — Emerge Livelihoods";
+    }
   }, [id]);
 
   const handlePrint = () => {

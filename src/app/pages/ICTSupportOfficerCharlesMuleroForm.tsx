@@ -166,6 +166,7 @@ export default function ICTSupportOfficerCharlesMuleroForm() {
   });
 
   useEffect(() => {
+    document.title = "ICT Support Officer (Charles Mulero) Performance Appraisal Form";
     const peerData = getPeerFeedbackForRole(position);
     setFeedback360(prev => ({
       ...prev,

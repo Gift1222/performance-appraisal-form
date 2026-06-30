@@ -172,6 +172,7 @@ export default function AccountingOfficerForm() {
   });
 
   useEffect(() => {
+    document.title = "Accounting Officer Performance Appraisal Form";
     const peerData = getPeerFeedbackForRole(position);
     setFeedback360(prev => ({
       ...prev,

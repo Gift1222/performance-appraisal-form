@@ -166,6 +166,7 @@ export default function AdministrationLogisticsAssistantForm() {
   });
 
   useEffect(() => {
+    document.title = "Administration and Logistics Assistant Performance Appraisal Form";
     const peerData = getPeerFeedbackForRole(position);
     setFeedback360(prev => ({
       ...prev,

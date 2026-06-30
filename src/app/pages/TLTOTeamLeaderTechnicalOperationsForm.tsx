@@ -179,6 +179,7 @@ export default function TLTOTeamLeaderTechnicalOperationsForm() {
   });
 
   useEffect(() => {
+    document.title = "TLTO Team Leader Technical Operations Performance Appraisal Form";
     const peerData = getPeerFeedbackForRole(position);
     setFeedback360(prev => ({
       ...prev,

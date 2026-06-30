@@ -165,6 +165,7 @@ export default function AdministrationOfficerForm() {
   });
 
   useEffect(() => {
+    document.title = "Administration Officer Performance Appraisal Form";
     const peerData = getPeerFeedbackForRole(position);
     setFeedback360(prev => ({
       ...prev,

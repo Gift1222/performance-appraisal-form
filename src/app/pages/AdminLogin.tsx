@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { login } from "../auth";
 import adminLogo from "@/imports/emerge-logo-1.png";
@@ -13,6 +13,10 @@ export default function AdminLogin() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+
+  useEffect(() => {
+    document.title = "Admin Login — Emerge Livelihoods";
+  }, []);
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();

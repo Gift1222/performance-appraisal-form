@@ -171,6 +171,7 @@ export default function TLSELTeamLeaderSustainableEntrepreneurshipForm() {
   });
 
   useEffect(() => {
+    document.title = "TLSEL Team Leader Sustainable Entrepreneurship Performance Appraisal Form";
     const peerData = getPeerFeedbackForRole(position);
     setFeedback360(prev => ({
       ...prev,

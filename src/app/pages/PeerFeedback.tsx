@@ -43,6 +43,7 @@ export default function PeerFeedback() {
 
   // Pre-select role if specified in search query (?role=...)
   useEffect(() => {
+    document.title = "Peer Feedback (360°) Form";
     const roleParam = searchParams.get("role");
     if (roleParam && ROLES.includes(roleParam)) {
       setRole(roleParam);

@@ -173,6 +173,7 @@ export default function TLLDETTeamLeaderLeadershipDevelopmentForm() {
   });
 
   useEffect(() => {
+    document.title = "TLLDET Team Leader Leadership Development Performance Appraisal Form";
     const peerData = getPeerFeedbackForRole(position);
     setFeedback360(prev => ({
       ...prev,

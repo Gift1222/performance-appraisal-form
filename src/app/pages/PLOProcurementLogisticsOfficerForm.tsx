@@ -170,6 +170,7 @@ export default function PLOProcurementLogisticsOfficerForm() {
   });
 
   useEffect(() => {
+    document.title = "PLO Procurement Logistics Officer Performance Appraisal Form";
     const peerData = getPeerFeedbackForRole(position);
     setFeedback360(prev => ({
       ...prev,

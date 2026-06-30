@@ -171,6 +171,7 @@ export default function IPAInvestmentPortfolioAnalystForm() {
   });
 
   useEffect(() => {
+    document.title = "IPA Investment Portfolio Analyst Performance Appraisal Form";
     const peerData = getPeerFeedbackForRole(position);
     setFeedback360(prev => ({
       ...prev,

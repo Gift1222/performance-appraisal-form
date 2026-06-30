@@ -166,6 +166,7 @@ export default function HumanResourceCoordinatorForm() {
   });
 
   useEffect(() => {
+    document.title = "Human Resource Coordinator Performance Appraisal Form";
     const peerData = getPeerFeedbackForRole(position);
     setFeedback360(prev => ({
       ...prev,

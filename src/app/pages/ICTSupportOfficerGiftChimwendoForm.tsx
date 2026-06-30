@@ -166,6 +166,7 @@ export default function ICTSupportOfficerGiftChimwendoForm() {
   });
 
   useEffect(() => {
+    document.title = "ICT Support Officer (Gift Chimwendo) Performance Appraisal Form";
     const peerData = getPeerFeedbackForRole(position);
     setFeedback360(prev => ({
       ...prev,
