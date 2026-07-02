@@ -23,7 +23,8 @@ const ROLES = [
   "Team Leader - Technical Operations (TL-TO)",
   "Investment and Portfolio Analyst - Acceleration",
   "Team Leader - Sustainable Entrepreneurship and Livelihoods (TL-SEL)",
-  "Procurement and Logistics Officer"
+  "Procurement and Logistics Officer",
+  "Program Officer - Leadership Development"
 ];
 
 export default function PeerFeedback() {

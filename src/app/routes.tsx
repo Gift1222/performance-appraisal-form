@@ -2,6 +2,7 @@ import { createBrowserRouter } from "react-router";
 import Layout from "./components/Layout";
 import RequireAuth from "./components/RequireAuth";
 import ProgramsDirectorForm from "./pages/ProgramsDirectorForm";
+import ProgramOfficerLeadershipDevelopmentForm from "./pages/ProgramOfficerLeadershipDevelopmentForm";
 import AccountingOfficerForm from "./pages/AccountingOfficerForm";
 import AdministrationOfficerForm from "./pages/AdministrationOfficerForm";
 import AdministrationLogisticsAssistantForm from "./pages/AdministrationLogisticsAssistantForm";
@@ -41,6 +42,7 @@ export const router = createBrowserRouter([
       { path: "ipa-investment-portfolio-analyst", Component: IPAInvestmentPortfolioAnalystForm },
       { path: "tl-sel-team-leader-sustainable-entrepreneurship", Component: TLSELTeamLeaderSustainableEntrepreneurshipForm },
       { path: "plo-procurement-logistics-officer", Component: PLOProcurementLogisticsOfficerForm },
+      { path: "program-officer-leadership-development", Component: ProgramOfficerLeadershipDevelopmentForm },
       { path: "peer-feedback", Component: PeerFeedback },
       { path: "admin/login", Component: AdminLogin },
       {

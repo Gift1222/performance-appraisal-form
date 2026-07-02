@@ -7,7 +7,7 @@ export default function Layout() {
   const navigate = useNavigate();
   const authed = isAuthenticated();
   const onAdminPage = location.pathname.startsWith("/admin") && location.pathname !== "/admin/login";
-  const FORM_PAGES = ["/", "/accounting-officer", "/administration-officer", "/administration-logistics-assistant", "/human-resource-coordinator", "/ict-support-officer-gift-chimwendo", "/ict-support-officer-charles-mulero", "/meal-coordinator", "/meal-officer", "/tlcm-team-leader-communications-marketing", "/tl-ldet-team-leader-leadership-development", "/tl-to-team-leader-technical-operations", "/ipa-investment-portfolio-analyst", "/tl-sel-team-leader-sustainable-entrepreneurship", "/plo-procurement-logistics-officer", "/peer-feedback"];
+  const FORM_PAGES = ["/", "/accounting-officer", "/administration-officer", "/administration-logistics-assistant", "/human-resource-coordinator", "/ict-support-officer-gift-chimwendo", "/ict-support-officer-charles-mulero", "/meal-coordinator", "/meal-officer", "/tlcm-team-leader-communications-marketing", "/tl-ldet-team-leader-leadership-development", "/tl-to-team-leader-technical-operations", "/ipa-investment-portfolio-analyst", "/tl-sel-team-leader-sustainable-entrepreneurship", "/plo-procurement-logistics-officer", "/program-officer-leadership-development", "/peer-feedback"];
   const isBareHeaderPage = FORM_PAGES.includes(location.pathname) || location.pathname === "/admin/login";
 
   function handleLogout() {
